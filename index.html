@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gamez Playz | Rudraksh Seth</title>
+    <!-- Favicon / Tab Icon -->
+    <link rel="icon" type="image/png" href="https://res.cloudinary.com/dtx8hi2qz/image/upload/v1775237763/Bold__SC__in_vibrant_purple_y5wxew.png">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* COMPLETELY REMOVE SCROLLBAR & OUTLINES */
+        * {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            outline: none !important;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        *::-webkit-scrollbar { display: none; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #050505;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* --- ADVANCED ANIMATIONS --- */
+        
+        @keyframes glowPulse {
+            0%, 100% { filter: drop-shadow(0 0 5px rgba(124, 58, 237, 0.4)); }
+            50% { filter: drop-shadow(0 0 20px rgba(124, 58, 237, 0.8)); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        @keyframes borderRotate {
+            0% { border-color: rgba(124, 58, 237, 0.2); }
+            50% { border-color: rgba(124, 58, 237, 1); }
+            100% { border-color: rgba(124, 58, 237, 0.2); }
+        }
+
+        @keyframes bgRotate {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* --- PRELOADER --- */
+        #preloader {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background: #050505;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1), visibility 1s;
+        }
+
+        .loader-logo {
+            width: 100px;
+            animation: glowPulse 2s infinite ease-in-out;
+        }
+
+        .progress-bar-container {
+            width: 240px;
+            height: 2px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            margin-top: 3rem;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.2);
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #6366f1, #a855f7, #6366f1);
+            background-size: 200% 100%;
+            animation: load 5s linear forwards, shimmer 2s infinite linear;
+        }
+
+        @keyframes load { to { width: 100%; } }
+
+        /* --- REVEAL EFFECTS --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- UI COMPONENTS --- */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -150%;
+            width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.05), transparent);
+            transform: skewX(-25deg);
+            transition: 0.75s;
+        }
+
+        .glass-card:hover::before { left: 150%; }
+
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(124, 58, 237, 0.5);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(124, 58, 237, 0.1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, #6366f1, #a855f7);
+            background-size: 200% auto;
+            transition: 0.5s;
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
+        }
+        
+        .btn-primary:hover {
+            background-position: right center;
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.6);
+            transform: scale(1.05);
+        }
+
+        .btn-outline {
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.02);
+            transition: 0.4s;
+        }
+
+        .btn-outline:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: white;
+            box-shadow: 0 0 20px rgba(255,255,255,0.1);
+        }
+
+        .gradient-text {
+            background: linear-gradient(to right, #a855f7, #6366f1, #a855f7);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 4s infinite linear;
+        }
+
+        .nav-link {
+            position: relative;
+            opacity: 0.6;
+            transition: 0.3s;
+        }
+
+        .nav-link:hover {
+            opacity: 1;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px; left: 0;
+            width: 0; height: 1px;
+            background: white;
+            transition: 0.3s;
+        }
+
+        .nav-link:hover::after { width: 100%; }
+
+        .view-section {
+            display: none;
+            opacity: 0;
+            transform: scale(0.98);
+            transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .view-section.active {
+            display: block;
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* --- BACKGROUND ORBS --- */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: -1;
+            opacity: 0.15;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- PRELOADER -->
+    <div id="preloader">
+        <svg class="loader-logo" viewBox="0 0 127 95" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M106.5 0H20.5C9.2 0 0 9.2 0 20.5V74.5C0 85.8 9.2 95 20.5 95H106.5C117.8 95 127 85.8 127 74.5V20.5C127 9.2 117.8 0 106.5 0ZM86.7 67.2C84.7 65.2 84.7 62 86.7 60L93.2 53.5H33.8L40.3 60C42.3 62 42.3 65.2 40.3 67.2C38.3 69.2 35.1 69.2 33.1 67.2L21.2 55.3C19.2 53.3 19.2 50.1 21.2 48.1L33.1 36.2C35.1 34.2 38.3 34.2 40.3 36.2C42.3 38.2 42.3 41.4 40.3 43.4L33.8 49.9H93.2L86.7 43.4C84.7 41.4 84.7 38.2 86.7 36.2C88.7 34.2 91.9 34.2 93.9 36.2L105.8 48.1C107.8 50.1 107.8 53.3 105.8 55.3L93.9 67.2C91.9 69.2 88.7 69.2 86.7 67.2Z" fill="#7c3aed"/>
+        </svg>
+        <div class="progress-bar-container">
+            <div class="progress-bar"></div>
+        </div>
+        <p class="mt-6 text-zinc-500 text-xs tracking-[0.3em] uppercase font-semibold">Initializing Security Protocols</p>
+    </div>
+
+    <!-- BACKGROUND EFFECTS -->
+    <div class="orb w-[500px] h-[500px] bg-indigo-600 top-[-10%] left-[-5%]"></div>
+    <div class="orb w-[400px] h-[400px] bg-purple-600 bottom-[10%] right-[-5%]"></div>
+
+    <!-- HEADER -->
+    <nav class="fixed w-full top-0 z-50 bg-[#050505]/60 backdrop-blur-xl border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="https://discord.com/users/838756654299873280" target="_blank" class="flex items-center gap-2 brand-link group">
+                <svg width="32" height="32" viewBox="0 0 127 95" class="transition-transform duration-500 group-hover:rotate-[360deg] drop-shadow-[0_0_8px_rgba(88,101,242,0.5)]" fill="#5865F2">
+                    <path d="M107.7 8.07a105.2 105.2 0 00-25.96-8.07s-2.6 4.97-4.32 8.64a97.1 97.1 0 00-27.14 0 71.9 71.9 0 00-4.47-8.64 105.2 105.2 0 00-25.96 8.07c-16.55 24.7-21.07 48.77-18.8 72.43a105.7 105.7 0 0031.91 16.14 77.1 77.1 0 006.7-10.9s-5.18-2-7.41-5.12c1.78-1.14 3.56-2.4 5.25-3.77 20.8 9.6 43.43 9.6 63.92 0 1.69 1.37 3.47 2.63 5.25 3.77-2.23 3.12-7.41 5.12-7.41 5.12a77.1 77.1 0 006.7 10.9 105.7 105.7 0 0031.91-16.14c2.8-27.4-4.83-51.18-18.66-72.43zM42.48 65.69c-6.19 0-11.33-5.69-11.33-12.63s5-12.63 11.33-12.63c6.4 0 11.45 5.69 11.33 12.63 0 6.94-5 12.63-11.33 12.63zm42.24 0c-6.19 0-11.33-5.69-11.33-12.63s5-12.63 11.33-12.63c6.4 0 11.45 5.69 11.33 12.63 0 6.94-5 12.63-11.33 12.63z" />
+                </svg>
+                <span class="font-extrabold text-xl tracking-tight">Gamez Playz</span>
+            </a>
+            
+            <div class="hidden md:flex items-center gap-10 text-sm font-semibold">
+                <button onclick="showPage('home')" class="nav-link">Home</button>
+                <a href="#about" class="nav-link home-nav-link">About</a>
+                <a href="#work" class="nav-link home-nav-link">Work</a>
+                <a href="https://discord.gg/shadycat" target="_blank" class="btn-primary px-8 py-3 rounded-full text-white">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HOME PAGE CONTENT -->
+    <main id="home-page" class="view-section active pt-20">
+        <!-- HERO -->
+        <section class="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
+            <div class="max-w-4xl mx-auto px-6 text-center reveal">
+                <a href="https://discord.com/users/838756654299873280" target="_blank" class="block brand-link">
+                    <h1 class="text-6xl md:text-8xl font-black gradient-text leading-[1.1] mb-4 select-none">Gamez Playz</h1>
+                </a>
+                <h2 class="text-2xl md:text-4xl font-bold text-white mb-6 tracking-tight">Rudraksh Seth</h2>
+                <p class="text-zinc-500 text-base md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed font-light">
+                    Building communities & facilitating secure virtual currency exchanges.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <a href="#work" class="btn-primary w-full sm:w-auto px-8 py-4 rounded-2xl font-bold text-base">View Portfolio</a>
+                    <button onclick="copyToClipboard('gamezzplayzz', 'Discord ID copied!')" class="btn-outline w-full sm:w-auto px-8 py-4 rounded-2xl font-bold text-base">Copy Discord ID</button>
+                    <button onclick="showPage('payments')" class="group relative bg-purple-600/10 text-purple-400 border border-purple-500/20 w-full sm:w-auto px-8 py-4 rounded-2xl font-bold text-base overflow-hidden">
+                        <span class="relative z-10">Payment Methods</span>
+                        <div class="absolute inset-0 bg-purple-600/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABOUT -->
+        <section id="about" class="py-32 bg-[#080808]/50 relative">
+            <div class="max-w-7xl mx-auto px-6">
+                <h2 class="text-5xl font-black mb-16 reveal inline-block border-b-4 border-indigo-600 pb-2">About Me</h2>
+                <div class="grid md:grid-cols-2 gap-10">
+                    <div class="glass-card p-12 rounded-[2.5rem] reveal">
+                        <div class="w-16 h-16 bg-indigo-600/20 flex items-center justify-center rounded-2xl mb-8 animate-[float_4s_infinite_ease-in-out]">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.5"><rect width="20" height="8" x="2" y="2" rx="2"/><rect width="20" height="8" x="2" y="14" rx="2"/><line x1="6" x2="6" y1="6" y2="6"/><line x1="6" x2="6" y1="18" y2="18"/></svg>
+                        </div>
+                        <h3 class="text-3xl font-black mb-6">Discord Management Expert</h3>
+                        <p class="text-zinc-400 text-lg leading-relaxed font-light">Transforming digital spaces into thriving ecosystems. With 5+ years of experience, I craft high-retention servers using custom bot logic and strategic moderation.</p>
+                    </div>
+                    <div class="glass-card p-12 rounded-[2.5rem] reveal" style="transition-delay: 0.1s;">
+                        <div class="w-16 h-16 bg-emerald-600/20 flex items-center justify-center rounded-2xl mb-8 animate-[float_4s_infinite_ease-in-out_0.5s]">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        </div>
+                        <h3 class="text-3xl font-black mb-6">Virtual Currency Exchange</h3>
+                        <p class="text-zinc-400 text-lg leading-relaxed font-light">Industry-standard security for crypto transactions. I facilitate high-volume exchanges with a strict focus on speed, transparency, and competitive market rates.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- STATS -->
+        <section class="py-32">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                    <div class="glass-card p-16 rounded-[3rem] text-center reveal">
+                        <div class="text-7xl font-black mb-4 tracking-tighter">5+</div>
+                        <div class="text-zinc-500 uppercase tracking-widest text-sm font-bold">Years of Excellence</div>
+                    </div>
+                    <div class="glass-card p-16 rounded-[3rem] text-center reveal border-purple-500/20 shadow-[0_0_30px_rgba(168,85,247,0.05)]">
+                        <div class="text-7xl font-black mb-4 text-purple-400 tracking-tighter">$15K+</div>
+                        <div class="text-zinc-500 uppercase tracking-widest text-sm font-bold">Trading Volume</div>
+                    </div>
+                    <div class="glass-card p-16 rounded-[3rem] text-center reveal">
+                        <div class="text-7xl font-black mb-4 tracking-tighter">1K+</div>
+                        <div class="text-zinc-500 uppercase tracking-widest text-sm font-bold">Vouched Trades</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- WORK -->
+        <section id="work" class="py-32 bg-[#080808]/50">
+            <div class="max-w-7xl mx-auto px-6">
+                <h2 class="text-5xl font-black mb-20 reveal">Past Projects</h2>
+                <div class="grid md:grid-cols-2 gap-12">
+                    <div class="group reveal relative">
+                        <div class="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-[3rem] blur opacity-25 group-hover:opacity-60 transition duration-1000 group-hover:duration-200"></div>
+                        <div class="relative overflow-hidden rounded-[2.5rem] bg-zinc-950 aspect-video glass-card border-none">
+                            <img src="https://res.cloudinary.com/dtx8hi2qz/image/upload/v1775235942/ChatGPT_Image_Apr_3_2026_10_05_23_PM_tgqs14.png" alt="Discord Server Management" class="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100 group-hover:rotate-1">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent flex items-end p-10">
+                                <div>
+                                    <h3 class="text-3xl font-black mb-2">Community Architect</h3>
+                                    <p class="text-zinc-300 text-lg">Full-stack server management & bot integration.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="group reveal relative" style="transition-delay: 0.1s;">
+                        <div class="absolute -inset-1 bg-gradient-to-r from-emerald-500 to-indigo-600 rounded-[3rem] blur opacity-25 group-hover:opacity-60 transition duration-1000 group-hover:duration-200"></div>
+                        <div class="relative overflow-hidden rounded-[2.5rem] bg-zinc-950 aspect-video glass-card border-none">
+                            <img src="https://res.cloudinary.com/dtx8hi2qz/image/upload/v1775236048/Futuristic_currency_exchange_design_w4zrlp.png" alt="Virtual Currency Exchange" class="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100 group-hover:-rotate-1">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent flex items-end p-10">
+                                <div>
+                                    <h3 class="text-3xl font-black mb-2">Currency Specialist</h3>
+                                    <p class="text-zinc-300 text-lg">Automated escrow & rapid asset liquidation.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- PAYMENT METHODS -->
+    <main id="payments-page" class="view-section pt-32 pb-32">
+        <div class="max-w-7xl mx-auto px-6">
+            <button onclick="showPage('home')" class="flex items-center gap-3 text-zinc-500 hover:text-white transition-all mb-12 group reveal">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="transition-transform group-hover:-translate-x-2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                <span class="text-lg font-bold">Return to Overview</span>
+            </button>
+
+            <div class="mb-20 reveal">
+                <h1 class="text-6xl md:text-8xl font-black mb-8 leading-[0.9]">Transfer Assets</h1>
+                <p class="text-zinc-400 text-xl font-light">Select your preferred protocol for settlement</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 mb-16">
+                <!-- UPI -->
+                <div class="glass-card p-8 rounded-[2.5rem] reveal">
+                    <div class="flex items-center gap-4 mb-8">
+                        <div class="w-14 h-14 rounded-2xl overflow-hidden shadow-[0_0_20px_rgba(255,215,0,0.2)] bg-black/40">
+                            <img src="https://res.cloudinary.com/dtx8hi2qz/image/upload/v1775236511/Glowing_Indian_Rupee_symbol_in_gold_pz0y5c.png" class="w-full h-full object-cover">
+                        </div>
+                        <h3 class="font-black text-xl">UPI Transfer</h3>
+                    </div>
+                    <div class="bg-black/60 p-6 rounded-3xl mb-8 flex flex-col items-center">
+                        <img src="https://res.cloudinary.com/dtx8hi2qz/image/upload/v1775234945/paytmqr_iurlcw.png" class="w-full max-w-[160px] aspect-square rounded-2xl mb-6 shadow-2xl bg-white p-2">
+                        <div class="text-center font-mono text-[11px] text-zinc-500 break-all p-3 bg-white/5 rounded-xl w-full">rudrakshseth@ptyes</div>
+                    </div>
+                    <button onclick="copyToClipboard('rudrakshseth@ptyes', 'UPI ID copied!')" class="btn-primary w-full py-5 rounded-2xl font-black">Copy UPI ID</button>
+                </div>
+
+                <!-- LTC -->
+                <div class="glass-card p-8 rounded-[2.5rem] reveal" style="transition-delay: 0.1s;">
+                    <div class="flex items-center gap-4 mb-8">
+                        <div class="w-14 h-14 rounded-2xl overflow-hidden shadow-[0_0_20px_rgba(52,93,157,0.2)] bg-black/40">
+                            <img src="https://res.cloudinary.com/dtx8hi2qz/image/upload/v1775236932/LItecoin_logo_close-up__endoftext___csrlpv.png" class="w-full h-full object-cover">
+                        </div>
+                        <h3 class="font-black text-xl">Litecoin</h3>
+                    </div>
+                    <div class="bg-black/60 p-6 rounded-3xl mb-8 flex flex-col items-center">
+                        <img src="https://res.cloudinary.com/dtx8hi2qz/image/upload/v1775236237/ltc_kocnkb.webp" class="w-full max-w-[160px] aspect-square rounded-2xl mb-6 shadow-2xl bg-white p-2">
+                        <div class="text-center font-mono text-[10px] text-zinc-500 break-all p-3 bg-white/5 rounded-xl w-full">ltc1qdvqme3m828e6znk9kvk76uykm56puadxp88lrj</div>
+                    </div>
+                    <button onclick="copyToClipboard('ltc1qdvqme3m828e6znk9kvk76uykm56puadxp88lrj', 'Address copied!')" class="btn-primary w-full py-5 rounded-2xl font-black">Copy Address</button>
+                </div>
+
+                <!-- USDT -->
+                <div class="glass-card p-8 rounded-[2.5rem] reveal" style="transition-delay: 0.2s;">
+                    <div class="flex items-center gap-4 mb-8">
+                        <div class="w-14 h-14 rounded-2xl overflow-hidden shadow-[0_0_20px_rgba(38,161,123,0.2)] bg-black/40">
+                            <img src="https://res.cloudinary.com/dtx8hi2qz/image/upload/v1775236988/Tether_logo_on_green_background_xyhdds.png" class="w-full h-full object-cover">
+                        </div>
+                        <h3 class="font-black text-xl">USDT (Multi)</h3>
+                    </div>
+                    <div class="bg-black/60 p-6 rounded-3xl mb-8 flex flex-col items-center">
+                        <img src="https://res.cloudinary.com/dtx8hi2qz/image/upload/v1775236237/usdt_sjkkux.webp" class="w-full max-w-[160px] aspect-square rounded-2xl mb-6 shadow-2xl bg-white p-2">
+                        <div class="text-center font-mono text-[10px] text-zinc-500 break-all p-3 bg-white/5 rounded-xl w-full">0xb3F8f8990f80cAC75777413a5318FC5Cb903fb86d</div>
+                    </div>
+                    <button onclick="copyToClipboard('0xb3F8f8990f80cAC75777413a5318FC5Cb903fb86d', 'Address copied!')" class="btn-primary w-full py-5 rounded-2xl font-black">Copy Address</button>
+                </div>
+
+                <!-- SOLANA -->
+                <div class="glass-card p-8 rounded-[2.5rem] reveal" style="transition-delay: 0.3s;">
+                    <div class="flex items-center gap-4 mb-8">
+                        <div class="w-14 h-14 rounded-2xl overflow-hidden shadow-[0_0_20px_rgba(20,241,149,0.2)] bg-black/40">
+                            <img src="https://res.cloudinary.com/dtx8hi2qz/image/upload/v1775237037/Solana_logo_with_vibrant_gradients_tnlkhi.png" class="w-full h-full object-cover">
+                        </div>
+                        <h3 class="font-black text-xl">Solana</h3>
+                    </div>
+                    <div class="bg-black/60 p-6 rounded-3xl mb-8 flex flex-col items-center">
+                        <img src="https://res.cloudinary.com/dtx8hi2qz/image/upload/v1775236236/solana_scycus.webp" class="w-full max-w-[160px] aspect-square rounded-2xl mb-6 shadow-2xl bg-white p-2">
+                        <div class="text-center font-mono text-[10px] text-zinc-500 break-all p-3 bg-white/5 rounded-xl w-full">2f41G5NpwrB1pm43eNyfDuomcXpnb46Ef4aDjVSXQamV</div>
+                    </div>
+                    <button onclick="copyToClipboard('2f41G5NpwrB1pm43eNyfDuomcXpnb46Ef4aDjVSXQamV', 'Address copied!')" class="btn-primary w-full py-5 rounded-2xl font-black">Copy Address</button>
+                </div>
+            </div>
+
+            <!-- NOTES -->
+            <div class="glass-card p-12 rounded-[3rem] reveal border-white/10">
+                <h2 class="text-3xl font-black mb-10 flex items-center gap-3">
+                    <span class="w-2 h-8 bg-indigo-600 rounded-full"></span>
+                    Execution Protocol
+                </h2>
+                <ul class="space-y-8">
+                    <li class="flex items-center gap-6 group">
+                        <div class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center font-black text-indigo-500 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-500">01</div>
+                        <span class="text-zinc-400 text-xl font-light">Verify terminal address precisely before initiating any data/asset transfer.</span>
+                    </li>
+                    <li class="flex items-center gap-6 group">
+                        <div class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center font-black text-indigo-500 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-500">02</div>
+                        <span class="text-zinc-400 text-xl font-light">Network mismatch on USDT <span class="text-white font-medium">(Polygon/BSC/ERC20)</span> will result in permanent asset loss.</span>
+                    </li>
+                    <li class="flex items-center gap-6 group">
+                        <div class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center font-black text-indigo-500 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-500">03</div>
+                        <span class="text-zinc-400 text-xl font-light">Direct uplink for assistance: <a href="https://discord.com/users/838756654299873280" target="_blank" class="text-white font-black hover:underline underline-offset-8 drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">GamezPlayz</a></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="py-24 border-t border-white/5 bg-[#030303]">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-12 mb-16">
+                <a href="https://discord.com/users/838756654299873280" target="_blank" class="flex items-center gap-3 brand-link">
+                    <svg width="24" height="24" viewBox="0 0 127 95" fill="#5865F2"><path d="M107.7 8.07a105.2 105.2 0 00-25.96-8.07s-2.6 4.97-4.32 8.64a97.1 97.1 0 00-27.14 0 71.9 71.9 0 00-4.47-8.64 105.2 105.2 0 00-25.96 8.07c-16.55 24.7-21.07 48.77-18.8 72.43a105.7 105.7 0 0031.91 16.14 77.1 77.1 0 006.7-10.9s-5.18-2-7.41-5.12c1.78-1.14 3.56-2.4 5.25-3.77 20.8 9.6 43.43 9.6 63.92 0 1.69 1.37 3.47 2.63 5.25 3.77-2.23 3.12-7.41 5.12-7.41 5.12a77.1 77.1 0 006.7 10.9 105.7 105.7 0 0031.91-16.14c2.8-27.4-4.83-51.18-18.66-72.43zM42.48 65.69c-6.19 0-11.33-5.69-11.33-12.63s5-12.63 11.33-12.63c6.4 0 11.45 5.69 11.33 12.63 0 6.94-5 12.63-11.33 12.63zm42.24 0c-6.19 0-11.33-5.69-11.33-12.63s5-12.63 11.33-12.63c6.4 0 11.45 5.69 11.33 12.63 0 6.94-5 12.63-11.33 12.63z" /></svg>
+                    <span class="font-black text-2xl tracking-tighter">Gamez Playz</span>
+                </a>
+                <div class="flex flex-wrap justify-center items-center gap-10 text-zinc-500 font-bold">
+                    <a href="https://discord.gg/shadycat" target="_blank" class="hover:text-indigo-400 transition-colors">discord.gg/shadycat</a>
+                    <span class="hidden md:inline text-zinc-800">•</span>
+                    <span class="hover:text-white transition-colors cursor-default">gamezzplayzz</span>
+                </div>
+            </div>
+            <div class="flex flex-col md:flex-row items-center justify-between gap-8 pt-12 border-t border-white/5">
+                <p class="text-zinc-600 text-sm font-medium tracking-tight">© 2026 <a href="https://discord.com/users/838756654299873280" target="_blank" class="hover:text-white transition-colors">Gamez Playz</a>. Powered by Innovation.</p>
+                <div class="flex items-center gap-3 bg-white/[0.03] px-6 py-3 rounded-2xl border border-white/5 shadow-2xl">
+                    <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_10px_#10b981]"></div>
+                    <span class="text-xs font-black text-zinc-400 uppercase tracking-widest">Official ShadyCat Website</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div id="copy-toast" class="font-black shadow-2xl border border-white/10 backdrop-blur-xl">Copied to clipboard!</div>
+
+    <script>
+        function copyToClipboard(text, message) {
+            const el = document.createElement('textarea');
+            el.value = text;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+
+            const toast = document.getElementById('copy-toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function showPage(pageId) {
+            const home = document.getElementById('home-page');
+            const payments = document.getElementById('payments-page');
+            const navItems = document.querySelectorAll('.home-nav-link');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (pageId === 'payments') {
+                home.classList.remove('active');
+                setTimeout(() => {
+                    home.style.display = 'none';
+                    payments.style.display = 'block';
+                    setTimeout(() => payments.classList.add('active'), 50);
+                }, 400);
+                navItems.forEach(el => el.classList.add('hidden'));
+            } else {
+                payments.classList.remove('active');
+                setTimeout(() => {
+                    payments.style.display = 'none';
+                    home.style.display = 'block';
+                    setTimeout(() => home.classList.add('active'), 50);
+                }, 400);
+                navItems.forEach(el => el.classList.remove('hidden'));
+            }
+        }
+
+        const revealElements = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, { threshold: 0.1 });
+        revealElements.forEach(el => observer.observe(el));
+
+        window.addEventListener('load', () => {
+            const preloader = document.getElementById('preloader');
+            setTimeout(() => {
+                preloader.style.opacity = '0';
+                preloader.style.visibility = 'hidden';
+                document.body.style.overflow = 'auto';
+                document.querySelectorAll('.view-section.active .reveal').forEach(el => el.classList.add('active'));
+            }, 5000);
+        });
+
+        document.body.style.overflow = 'hidden';
+    </script>
+</body>
+</html>
