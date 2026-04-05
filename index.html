@@ -27,6 +27,12 @@
             background-color: #050505;
             color: white;
             overflow-x: hidden;
+            /* Applying the requested background image with dark transparency overlay */
+            background-image: linear-gradient(rgba(5, 5, 5, 0.75), rgba(5, 5, 5, 0.9)), 
+                              url('https://res.cloudinary.com/dtx8hi2qz/image/upload/v1775397821/aad_wi57o5.webp');
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
         }
 
         /* --- ADVANCED ANIMATIONS --- */
@@ -266,7 +272,7 @@
                 
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
                     <a href="#work" class="btn-primary w-full sm:w-auto px-8 py-4 rounded-2xl font-bold text-base">View Portfolio</a>
-                    <button onclick="copyToClipboard('gamezzplayzz', 'Discord ID copied!')" class="btn-outline w-full sm:w-auto px-8 py-4 rounded-2xl font-bold text-base">Copy Discord ID</button>
+                    <button onclick="copyToClipboard('gamezzplayzz')" class="btn-outline w-full sm:w-auto px-8 py-4 rounded-2xl font-bold text-base">Copy Discord ID</button>
                     <button onclick="showPage('payments')" class="group relative bg-purple-600/10 text-purple-400 border border-purple-500/20 w-full sm:w-auto px-8 py-4 rounded-2xl font-bold text-base overflow-hidden">
                         <span class="relative z-10">Payment Methods</span>
                         <div class="absolute inset-0 bg-purple-600/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -379,7 +385,7 @@
                         <img src="https://res.cloudinary.com/dtx8hi2qz/image/upload/v1775234945/paytmqr_iurlcw.png" class="w-full max-w-[160px] aspect-square rounded-2xl mb-6 shadow-2xl bg-white p-2">
                         <div class="text-center font-mono text-[11px] text-zinc-500 break-all p-3 bg-white/5 rounded-xl w-full">rudrakshseth@ptyes</div>
                     </div>
-                    <button onclick="copyToClipboard('rudrakshseth@ptyes', 'UPI ID copied!')" class="btn-primary w-full py-5 rounded-2xl font-black">Copy UPI ID</button>
+                    <button onclick="copyToClipboard('rudrakshseth@ptyes')" class="btn-primary w-full py-5 rounded-2xl font-black">Copy UPI ID</button>
                 </div>
 
                 <!-- LTC -->
@@ -394,7 +400,7 @@
                         <img src="https://res.cloudinary.com/dtx8hi2qz/image/upload/v1775236237/ltc_kocnkb.webp" class="w-full max-w-[160px] aspect-square rounded-2xl mb-6 shadow-2xl bg-white p-2">
                         <div class="text-center font-mono text-[10px] text-zinc-500 break-all p-3 bg-white/5 rounded-xl w-full">ltc1qdvqme3m828e6znk9kvk76uykm56puadxp88lrj</div>
                     </div>
-                    <button onclick="copyToClipboard('ltc1qdvqme3m828e6znk9kvk76uykm56puadxp88lrj', 'Address copied!')" class="btn-primary w-full py-5 rounded-2xl font-black">Copy Address</button>
+                    <button onclick="copyToClipboard('ltc1qdvqme3m828e6znk9kvk76uykm56puadxp88lrj')" class="btn-primary w-full py-5 rounded-2xl font-black">Copy Address</button>
                 </div>
 
                 <!-- USDT -->
@@ -409,7 +415,7 @@
                         <img src="https://res.cloudinary.com/dtx8hi2qz/image/upload/v1775236237/usdt_sjkkux.webp" class="w-full max-w-[160px] aspect-square rounded-2xl mb-6 shadow-2xl bg-white p-2">
                         <div class="text-center font-mono text-[10px] text-zinc-500 break-all p-3 bg-white/5 rounded-xl w-full">0xb3F8f8990f80cAC75777413a5318FC5Cb903fb86d</div>
                     </div>
-                    <button onclick="copyToClipboard('0xb3F8f8990f80cAC75777413a5318FC5Cb903fb86d', 'Address copied!')" class="btn-primary w-full py-5 rounded-2xl font-black">Copy Address</button>
+                    <button onclick="copyToClipboard('0xb3F8f8990f80cAC75777413a5318FC5Cb903fb86d')" class="btn-primary w-full py-5 rounded-2xl font-black">Copy Address</button>
                 </div>
 
                 <!-- SOLANA -->
@@ -424,7 +430,7 @@
                         <img src="https://res.cloudinary.com/dtx8hi2qz/image/upload/v1775236236/solana_scycus.webp" class="w-full max-w-[160px] aspect-square rounded-2xl mb-6 shadow-2xl bg-white p-2">
                         <div class="text-center font-mono text-[10px] text-zinc-500 break-all p-3 bg-white/5 rounded-xl w-full">2f41G5NpwrB1pm43eNyfDuomcXpnb46Ef4aDjVSXQamV</div>
                     </div>
-                    <button onclick="copyToClipboard('2f41G5NpwrB1pm43eNyfDuomcXpnb46Ef4aDjVSXQamV', 'Address copied!')" class="btn-primary w-full py-5 rounded-2xl font-black">Copy Address</button>
+                    <button onclick="copyToClipboard('2f41G5NpwrB1pm43eNyfDuomcXpnb46Ef4aDjVSXQamV')" class="btn-primary w-full py-5 rounded-2xl font-black">Copy Address</button>
                 </div>
             </div>
 
@@ -476,21 +482,14 @@
         </div>
     </footer>
 
-    <div id="copy-toast" class="font-black shadow-2xl border border-white/10 backdrop-blur-xl">Copied to clipboard!</div>
-
     <script>
-        function copyToClipboard(text, message) {
+        function copyToClipboard(text) {
             const el = document.createElement('textarea');
             el.value = text;
             document.body.appendChild(el);
             el.select();
             document.execCommand('copy');
             document.body.removeChild(el);
-
-            const toast = document.getElementById('copy-toast');
-            toast.textContent = message;
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3000);
         }
 
         function showPage(pageId) {
