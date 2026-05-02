@@ -27,7 +27,6 @@
             background-color: #050505;
             color: white;
             overflow-x: hidden;
-            /* Applying the requested background image with dark transparency overlay */
             background-image: linear-gradient(rgba(5, 5, 5, 0.75), rgba(5, 5, 5, 0.9)), 
                               url('https://res.cloudinary.com/dtx8hi2qz/image/upload/v1775397821/aad_wi57o5.webp');
             background-attachment: fixed;
@@ -36,7 +35,6 @@
         }
 
         /* --- ADVANCED ANIMATIONS --- */
-        
         @keyframes glowPulse {
             0%, 100% { filter: drop-shadow(0 0 5px rgba(124, 58, 237, 0.4)); }
             50% { filter: drop-shadow(0 0 20px rgba(124, 58, 237, 0.8)); }
@@ -50,17 +48,6 @@
         @keyframes shimmer {
             0% { background-position: -200% 0; }
             100% { background-position: 200% 0; }
-        }
-
-        @keyframes borderRotate {
-            0% { border-color: rgba(124, 58, 237, 0.2); }
-            50% { border-color: rgba(124, 58, 237, 1); }
-            100% { border-color: rgba(124, 58, 237, 0.2); }
-        }
-
-        @keyframes bgRotate {
-            from { transform: translate(-50%, -50%) rotate(0deg); }
-            to { transform: translate(-50%, -50%) rotate(360deg); }
         }
 
         /* --- PRELOADER --- */
@@ -222,7 +209,7 @@
 
         /* Vouch Cards Styling */
         .vouch-card {
-            background: rgba(30, 31, 34, 0.6); /* Discord dark theme color */
+            background: rgba(30, 31, 34, 0.6);
             border: 1px solid rgba(255,255,255,0.05);
             transition: transform 0.2s ease;
         }
@@ -230,6 +217,31 @@
             background: rgba(43, 45, 49, 0.8);
             transform: translateX(5px);
             border-color: rgba(124, 58, 237, 0.3);
+        }
+
+        /* Discord Embed Replica Styling */
+        .discord-embed {
+            background-color: #2B2D31;
+            border-left: 4px solid #22c55e;
+            border-radius: 4px;
+            padding: 16px;
+        }
+        .discord-btn {
+            background-color: #2B2D31;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s;
+        }
+        .discord-btn:hover:not(:disabled) {
+            background-color: #404249;
+        }
+        .discord-btn.active {
+            background-color: #383A40;
+            border: 1px solid #22c55e;
         }
     </style>
 </head>
@@ -324,12 +336,18 @@
                         <div class="text-6xl md:text-7xl font-black mb-4 tracking-tighter">5+</div>
                         <div class="text-zinc-500 uppercase tracking-widest text-xs md:text-sm font-bold">Years of Experience</div>
                     </div>
-                    <div class="glass-card p-10 md:p-16 rounded-[3rem] text-center reveal border-purple-500/20 shadow-[0_0_30px_rgba(168,85,247,0.05)]">
-                        <div class="text-6xl md:text-7xl font-black mb-4 text-purple-400 tracking-tighter">$15K+</div>
+                    <div class="glass-card p-10 md:p-16 rounded-[3rem] text-center reveal border-purple-500/20 shadow-[0_0_30px_rgba(168,85,247,0.05)] relative overflow-visible">
+                        <div class="flex items-center justify-center gap-2 mb-4 relative">
+                            <div id="stat-exchanged" class="text-6xl md:text-7xl font-black text-purple-400 tracking-tighter">$15K+</div>
+                            <div id="live-indicator-1" class="hidden w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_10px_#22c55e] absolute -right-2 top-0" title="Live Sync Active"></div>
+                        </div>
                         <div class="text-zinc-500 uppercase tracking-widest text-xs md:text-sm font-bold">Total Exchanged</div>
                     </div>
-                    <div class="glass-card p-10 md:p-16 rounded-[3rem] text-center reveal">
-                        <div class="text-6xl md:text-7xl font-black mb-4 tracking-tighter">1K+</div>
+                    <div class="glass-card p-10 md:p-16 rounded-[3rem] text-center reveal relative overflow-visible">
+                        <div class="flex items-center justify-center gap-2 mb-4 relative">
+                            <div id="stat-customers" class="text-6xl md:text-7xl font-black tracking-tighter">1K+</div>
+                            <div id="live-indicator-2" class="hidden w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_10px_#22c55e] absolute -right-2 top-0" title="Live Sync Active"></div>
+                        </div>
                         <div class="text-zinc-500 uppercase tracking-widest text-xs md:text-sm font-bold">Happy Customers</div>
                     </div>
                 </div>
@@ -476,30 +494,63 @@
 
     <!-- VOUCHES PAGE (LIVE API FETCH VIA BACKEND) -->
     <main id="vouches-page" class="view-section pt-32 pb-32">
-        <div class="max-w-4xl mx-auto px-6">
+        <div class="max-w-[1400px] mx-auto px-6">
             <button onclick="window.showPage('home')" class="flex items-center gap-3 text-zinc-500 hover:text-white transition-all mb-12 group">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="transition-transform group-hover:-translate-x-2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
                 <span class="text-lg font-bold">Back to Projects</span>
             </button>
 
-            <!-- Dynamic Header via JS -->
-            <div class="mb-12">
-                <h1 id="vouch-title" class="text-4xl md:text-7xl font-black mb-4">Client Vouches</h1>
-                <p id="vouch-desc" class="text-zinc-400 text-lg md:text-xl font-light mb-8">Fetching live data directly from Discord...</p>
-                <a id="vouch-link" href="#" target="_blank" class="inline-flex items-center gap-2 btn-primary px-6 md:px-8 py-3 md:py-4 rounded-xl font-bold text-white shadow-lg text-sm md:text-base">
-                    <svg width="20" height="20" viewBox="0 0 127 95" fill="white"><path d="M107.7 8.07a105.2 105.2 0 00-25.96-8.07s-2.6 4.97-4.32 8.64a97.1 97.1 0 00-27.14 0 71.9 71.9 0 00-4.47-8.64 105.2 105.2 0 00-25.96 8.07c-16.55 24.7-21.07 48.77-18.8 72.43a105.7 105.7 0 0031.91 16.14 77.1 77.1 0 006.7-10.9s-5.18-2-7.41-5.12c1.78-1.14 3.56-2.4 5.25-3.77 20.8 9.6 43.43 9.6 63.92 0 1.69 1.37 3.47 2.63 5.25 3.77-2.23 3.12-7.41 5.12-7.41 5.12a77.1 77.1 0 006.7 10.9 105.7 105.7 0 0031.91-16.14c2.8-27.4-4.83-51.18-18.66-72.43zM42.48 65.69c-6.19 0-11.33-5.69-11.33-12.63s5-12.63 11.33-12.63c6.4 0 11.45 5.69 11.33 12.63 0 6.94-5 12.63-11.33 12.63zm42.24 0c-6.19 0-11.33-5.69-11.33-12.63s5-12.63 11.33-12.63c6.4 0 11.45 5.69 11.33 12.63 0 6.94-5 12.63-11.33 12.63z" /></svg>
-                    View Channel on Discord
-                </a>
-            </div>
+            <!-- EXACT SIDE-BY-SIDE LAYOUT (Triggers on medium/tablet screens and up) -->
+            <div class="flex flex-col md:flex-row gap-8 lg:gap-12">
+                <!-- LEFT COLUMN: VOUCHES -->
+                <div class="w-full md:w-7/12 lg:w-2/3">
+                    <div class="mb-12">
+                        <h1 id="vouch-title" class="text-4xl md:text-6xl font-black mb-4">Client Vouches</h1>
+                        <p id="vouch-desc" class="text-zinc-400 text-lg font-light mb-8">Fetching live data directly from Discord...</p>
+                        <a id="vouch-link" href="#" target="_blank" class="inline-flex items-center gap-2 btn-primary px-6 py-3 rounded-xl font-bold text-white shadow-lg text-sm">
+                            <svg width="20" height="20" viewBox="0 0 127 95" fill="white"><path d="M107.7 8.07a105.2 105.2 0 00-25.96-8.07s-2.6 4.97-4.32 8.64a97.1 97.1 0 00-27.14 0 71.9 71.9 0 00-4.47-8.64 105.2 105.2 0 00-25.96 8.07c-16.55 24.7-21.07 48.77-18.8 72.43a105.7 105.7 0 0031.91 16.14 77.1 77.1 0 006.7-10.9s-5.18-2-7.41-5.12c1.78-1.14 3.56-2.4 5.25-3.77 20.8 9.6 43.43 9.6 63.92 0 1.69 1.37 3.47 2.63 5.25 3.77-2.23 3.12-7.41 5.12-7.41 5.12a77.1 77.1 0 006.7 10.9 105.7 105.7 0 0031.91-16.14c2.8-27.4-4.83-51.18-18.66-72.43zM42.48 65.69c-6.19 0-11.33-5.69-11.33-12.63s5-12.63 11.33-12.63c6.4 0 11.45 5.69 11.33 12.63 0 6.94-5 12.63-11.33 12.63zm42.24 0c-6.19 0-11.33-5.69-11.33-12.63s5-12.63 11.33-12.63c6.4 0 11.45 5.69 11.33 12.63 0 6.94-5 12.63-11.33 12.63z" /></svg>
+                            View Channel on Discord
+                        </a>
+                    </div>
+                    <div id="vouch-feed" class="space-y-6">
+                        <!-- Javascript will inject the Discord API response here -->
+                    </div>
+                </div>
 
-            <!-- Real-time Feed Container -->
-            <div id="vouch-feed" class="space-y-6">
-                <!-- Javascript will inject the Discord API response here -->
+                <!-- RIGHT COLUMN: LEADERBOARD & DEALS -->
+                <div class="w-full md:w-5/12 lg:w-1/3 space-y-8">
+                    <!-- Top 3 Deals -->
+                    <div class="glass-card p-6 rounded-2xl">
+                        <h2 id="top-deals-title" class="text-xl font-bold mb-4 flex items-center gap-2">
+                            <span class="w-1.5 h-6 bg-indigo-500 rounded-full"></span>
+                            Top 3 Deals
+                        </h2>
+                        <div id="top-deals-list" class="space-y-3">
+                            <div class="text-zinc-500 text-sm animate-pulse">Loading live deals...</div>
+                        </div>
+                    </div>
+
+                    <!-- Discord Embed Leaderboard Replica -->
+                    <div class="discord-embed shadow-xl sticky top-28">
+                        <div class="text-white font-bold text-[15px] mb-3 flex items-center gap-2">
+                            🏆 Overall Dealers Leaderboard
+                        </div>
+                        <div id="leaderboard-list" class="space-y-1.5 text-sm text-zinc-300">
+                            <div class="text-zinc-500 animate-pulse py-2">Loading leaderboard...</div>
+                        </div>
+                        <div id="leaderboard-page-indicator" class="text-xs text-zinc-500 mt-4 mb-3">Page 1/1</div>
+                        <div class="flex gap-2">
+                            <button class="bg-[#2B2D31] hover:bg-[#404249] transition-colors rounded text-white px-3 py-1.5" onclick="window.prevPage()">◀</button>
+                            <button class="bg-[#383A40] border border-green-500 rounded text-white px-3 py-1.5 cursor-default">✋</button>
+                            <button class="bg-[#2B2D31] hover:bg-[#404249] transition-colors rounded text-white px-3 py-1.5" onclick="window.nextPage()">▶</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
 
-    <!-- DISCORD PROFILE MODAL (NEW) -->
+    <!-- DISCORD PROFILE MODAL -->
     <div id="profile-modal" class="fixed inset-0 z-[100] hidden items-center justify-center transition-opacity duration-300 opacity-0" style="display: none;">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="window.closeProfileModal()"></div>
         <div id="profile-card" class="bg-[#111214] w-[340px] rounded-2xl overflow-hidden shadow-2xl relative border border-white/5 scale-95 transition-transform duration-300 mx-4">
@@ -566,34 +617,27 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Catch any global errors and alert the user so they never fail silently
         window.onerror = function(msg, url, line) {
             console.error("Global Error: " + msg + " at line " + line);
         };
 
         // ==========================================================
-        //  FIREBASE CLOUD STORAGE SETUP
+        //  APP 1: FIREBASE CLOUD CACHE (gamez-playz-portfolio)
         // ==========================================================
-        let firebaseConfig;
-        if (typeof __firebase_config !== 'undefined') {
-            firebaseConfig = JSON.parse(__firebase_config);
-        } else {
-            // Hardcoded Firebase Config for Gamez Playz Portfolio
-            firebaseConfig = {
-                apiKey: "AIzaSyAdked-d-2CXz26NPZJPVa-WWebem0G7vE",
-                authDomain: "gamez-playz-portfolio.firebaseapp.com",
-                databaseURL: "https://gamez-playz-portfolio-default-rtdb.firebaseio.com",
-                projectId: "gamez-playz-portfolio",
-                storageBucket: "gamez-playz-portfolio.firebasestorage.app",
-                messagingSenderId: "280266044679",
-                appId: "1:280266044679:web:a30c4794754f170bc341a2",
-                measurementId: "G-S76XM9NEJ2"
-            };
-        }
+        const firebaseConfig = {
+            apiKey: "AIzaSyAdked-d-2CXz26NPZJPVa-WWebem0G7vE",
+            authDomain: "gamez-playz-portfolio.firebaseapp.com",
+            databaseURL: "https://gamez-playz-portfolio-default-rtdb.firebaseio.com",
+            projectId: "gamez-playz-portfolio",
+            storageBucket: "gamez-playz-portfolio.firebasestorage.app",
+            messagingSenderId: "280266044679",
+            appId: "1:280266044679:web:a30c4794754f170bc341a2",
+            measurementId: "G-S76XM9NEJ2"
+        };
         
-        const app = initializeApp(firebaseConfig);
+        const app = initializeApp(firebaseConfig, "cacheApp");
         const auth = getAuth(app);
         const db = getFirestore(app);
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'gamez-playz-portfolio';
@@ -601,26 +645,276 @@
         window.firebaseUser = null;
         
         const initAuth = async () => {
-            try {
-                await signInAnonymously(auth);
-            } catch(e) {
-                console.error("Firebase Auth Error", e);
-            }
+            try { await signInAnonymously(auth); } catch(e) {}
         };
         initAuth();
-
         onAuthStateChanged(auth, (user) => {
             window.firebaseUser = user;
         });
 
         // ==========================================================
+        //  APP 2: SHADYCAT BOT DATABASE (mm_deals)
+        // ==========================================================
+        const shadycatConfig = {
+            apiKey: "AIzaSyC3qQ3qFZzh52ZKmqP-91xiXYfYchRW-UM",
+            authDomain: "shadycat-bot.firebaseapp.com",
+            databaseURL: "https://shadycat-bot-default-rtdb.firebaseio.com",
+            projectId: "shadycat-bot",
+            storageBucket: "shadycat-bot.firebasestorage.app",
+            messagingSenderId: "444723719084",
+            appId: "1:444723719084:web:5e3fd3d20ea1f31a5ee809",
+            measurementId: "G-4YRJQRCB6K"
+        };
+        
+        let db2 = null;
+        try {
+            const app2 = initializeApp(shadycatConfig, "shadycatApp");
+            db2 = getFirestore(app2);
+            window.db2 = db2; // expose to window for functions
+        } catch(e) { console.error("Error initializing ShadyCat DB", e); }
+
+
+        // ==========================================================
+        //  LIVE STATS & LEADERBOARD CALCULATOR
+        // ==========================================================
+        window.leaderboardData = [];
+        window.leaderboardPage = 1;
+        const LEADERBOARD_PAGE_SIZE = 10;
+        window.topIndividualDeals = [];
+        window.currentVouchType = 'server';
+
+        // 🌟 Helper Function: Parses Raw Strings & Discord Timestamps into Clean Dates
+        function formatTimestamp(ts) {
+            if (!ts) return 'Recent';
+            if (ts && typeof ts.toDate === 'function') {
+                return ts.toDate().toLocaleDateString(undefined, { day: '2-digit', month: 'short', year: 'numeric' });
+            }
+            if (typeof ts === 'string') {
+                const match = ts.match(/seconds=(\d+)/);
+                if (match) {
+                    const date = new Date(parseInt(match[1]) * 1000);
+                    return date.toLocaleDateString(undefined, { day: '2-digit', month: 'short', year: 'numeric' });
+                }
+                if (ts.includes(' at ')) return ts.split(' at ')[0];
+                return ts;
+            }
+            return 'Recent';
+        }
+
+        async function loadLiveDealsData() {
+            if (!window.db2) return;
+            try {
+                const dealsRef = collection(window.db2, 'mm_deals');
+                const snapshot = await getDocs(dealsRef);
+                
+                let totalAmount = 0;
+                let totalDeals = 0;
+                const aggregates = {};
+                const allDeals = [];
+
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    if (data.amount && data.user_id) {
+                        const amt = Number(data.amount);
+                        totalAmount += amt;
+                        totalDeals++;
+
+                        // ⚠️ ROOT CAUSE FIX: Some IDs in mm_deals are saved as "<@130...>" 
+                        // This strips the brackets so the bot can actually find them!
+                        const cleanUid = String(data.user_id).replace(/[<@!>]/g, '');
+                        const cleanTime = formatTimestamp(data.timestamp);
+
+                        allDeals.push({ id: doc.id, user_id: cleanUid, amount: amt, timestamp: cleanTime });
+
+                        if (!aggregates[cleanUid]) aggregates[cleanUid] = { amount: 0, count: 0 };
+                        aggregates[cleanUid].amount += amt;
+                        aggregates[cleanUid].count += 1;
+                    }
+                });
+
+                // Update Homepage Stats
+                if (totalDeals > 0) {
+                    const exchangedEl = document.getElementById('stat-exchanged');
+                    const customersEl = document.getElementById('stat-customers');
+                    if (exchangedEl) {
+                        exchangedEl.textContent = '$' + totalAmount.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 2}) + '+';
+                        document.getElementById('live-indicator-1').classList.remove('hidden');
+                    }
+                    if (customersEl) {
+                        customersEl.textContent = totalDeals + '+';
+                        document.getElementById('live-indicator-2').classList.remove('hidden');
+                    }
+                }
+
+                // Prepare Top 3 Deals & Leaderboard globally
+                window.topIndividualDeals = [...allDeals].sort((a,b) => b.amount - a.amount).slice(0, 3);
+                window.leaderboardData = Object.keys(aggregates).map(uid => ({
+                    user_id: uid,
+                    amount: aggregates[uid].amount,
+                    count: aggregates[uid].count
+                })).sort((a,b) => b.amount - a.amount);
+
+                // Initial Render (Uses Cache instantly if available)
+                renderLeaderboard();
+                renderTopDeals(window.currentVouchType);
+
+                // 🌟 DYNAMIC HYDRATION: Background resolve all usernames!
+                const uniqueUids = Object.keys(aggregates);
+                hydrateUsernames(uniqueUids);
+
+            } catch (err) {
+                console.error("Error loading live deals from shadycat-bot:", err);
+            }
+        }
+
+        // 🌟 Hydrates Usernames with Robust Offline Fallback Priority!
+        window.hydrateUsernames = async function(userIds) {
+            userIds.forEach(async (uid) => {
+                let fetchedUserData = null;
+                let needRender = false;
+
+                // 1. FASTEST: Check Local Cache FIRST (Offline capable)
+                const cached = localStorage.getItem(`gamez_profile_${uid}`);
+                if (cached) {
+                    try {
+                        const parsed = JSON.parse(cached);
+                        if (parsed.user) {
+                            window.discordUsers[uid] = parsed.user;
+                            needRender = true;
+                        }
+                    } catch(e) {}
+                }
+
+                if (needRender) {
+                    renderLeaderboard();
+                    renderTopDeals(window.currentVouchType);
+                }
+
+                // 2. FRESHEST: Try bot.py silently in the background
+                try {
+                    const GUILD_ID = "1376234347719299104";
+                    const response = await fetch(`${BACKEND_URL}user/${GUILD_ID}/${uid}`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.user) {
+                            // Only re-render if data actually changed
+                            if (!window.discordUsers[uid] || window.discordUsers[uid].username !== data.user.username) {
+                                window.discordUsers[uid] = data.user;
+                                localStorage.setItem(`gamez_profile_${uid}`, JSON.stringify(data));
+                                if (window.firebaseUser) {
+                                    setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'profiles', uid), { content: JSON.stringify(data) }).catch(()=>{});
+                                }
+                                renderLeaderboard();
+                                renderTopDeals(window.currentVouchType);
+                            }
+                        }
+                    }
+                } catch(e) {
+                    // 3. OFFLINE FALLBACK: If Bot fails & no local cache, check Firebase!
+                    if (!window.discordUsers[uid] && window.firebaseUser) {
+                        try {
+                            const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'profiles', uid);
+                            const snap = await getDoc(docRef);
+                            if (snap.exists()) {
+                                const parsed = JSON.parse(snap.data().content);
+                                if (parsed.user) {
+                                    window.discordUsers[uid] = parsed.user;
+                                    renderLeaderboard();
+                                    renderTopDeals(window.currentVouchType);
+                                }
+                            }
+                        } catch(err) {}
+                    }
+                }
+            });
+        };
+
+        function renderLeaderboard() {
+            const list = document.getElementById('leaderboard-list');
+            const pageInd = document.getElementById('leaderboard-page-indicator');
+            if(!list || window.leaderboardData.length === 0) return;
+
+            const totalPages = Math.ceil(window.leaderboardData.length / LEADERBOARD_PAGE_SIZE) || 1;
+            window.leaderboardPage = Math.max(1, Math.min(window.leaderboardPage, totalPages));
+
+            pageInd.textContent = `Page ${window.leaderboardPage}/${totalPages}`;
+
+            const start = (window.leaderboardPage - 1) * LEADERBOARD_PAGE_SIZE;
+            const pageData = window.leaderboardData.slice(start, start + LEADERBOARD_PAGE_SIZE);
+
+            list.innerHTML = pageData.map((d, i) => {
+                const rank = start + i + 1;
+                
+                // Show pure ID initially, swap to actual @Username upon hydration!
+                let displayName = d.user_id;
+                if(window.discordUsers && window.discordUsers[d.user_id]) {
+                    displayName = window.discordUsers[d.user_id].username;
+                }
+
+                const mentionHtml = `<span class="bg-[#5865F2]/30 text-[#DBDEFF] px-1.5 py-[1px] rounded cursor-pointer hover:bg-[#5865F2]/50 transition-colors text-[13px] font-medium" onclick="window.openProfileModal('${d.user_id}')">@${displayName}</span>`;
+
+                return `<div class="flex items-center gap-1.5 my-1.5">
+                    <span class="font-bold w-7 text-white">#${rank}</span>
+                    ${mentionHtml}
+                    <span class="text-zinc-500 mx-1">•</span>
+                    <span class="font-bold text-white">$${d.amount.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                    <span class="text-zinc-400 text-xs ml-1">(${d.count} Deals)</span>
+                </div>`;
+            }).join('');
+        }
+
+        window.nextPage = function() {
+            window.leaderboardPage++;
+            renderLeaderboard();
+        }
+        window.prevPage = function() {
+            window.leaderboardPage--;
+            renderLeaderboard();
+        }
+
+        function renderTopDeals(type) {
+            const titleEl = document.getElementById('top-deals-title');
+            const listEl = document.getElementById('top-deals-list');
+            if(!titleEl || !listEl) return;
+
+            const titleColorClass = type === 'server' ? 'bg-indigo-500' : 'bg-emerald-500';
+            const titleText = type === 'server' ? 'Server Setup' : 'Exchange';
+            titleEl.innerHTML = `<span class="w-1.5 h-6 ${titleColorClass} rounded-full"></span> Top 3 ${titleText} Deals`;
+
+            if(window.topIndividualDeals.length === 0) {
+                listEl.innerHTML = '<div class="text-zinc-500 text-sm">No deals found yet.</div>';
+                return;
+            }
+
+            listEl.innerHTML = window.topIndividualDeals.map((d, i) => {
+                let displayName = d.user_id;
+                if(window.discordUsers && window.discordUsers[d.user_id]) {
+                    displayName = window.discordUsers[d.user_id].username;
+                }
+                
+                const typeColorClass = type === 'server' ? 'text-indigo-400' : 'text-emerald-400';
+                const typeBgClass = type === 'server' ? 'bg-indigo-500/20 text-indigo-200 hover:bg-indigo-500/40' : 'bg-emerald-500/20 text-emerald-200 hover:bg-emerald-500/40';
+
+                return `
+                <div class="bg-white/5 border border-white/10 p-3 rounded-xl flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="text-xl font-black text-zinc-500">0${i+1}</div>
+                        <div>
+                            <div class="text-[13px] font-medium ${typeBgClass} px-1.5 py-0.5 rounded cursor-pointer transition-colors" onclick="window.openProfileModal('${d.user_id}')">@${displayName}</div>
+                            <div class="text-xs text-zinc-500 mt-1">${d.timestamp}</div>
+                        </div>
+                    </div>
+                    <div class="text-lg font-black ${typeColorClass}">$${d.amount}</div>
+                </div>`;
+            }).join('');
+        }
+
+
+        // ==========================================================
         //  BACKEND API SETUP FOR LIVE VOUCHES & PROFILES
         // ==========================================================
-        
-        // Connects safely to your python bot running on port 5000
         const BACKEND_URL = "http://127.0.0.1:5000/api/";
 
-        // Global store for user profiles grabbed from mentions/messages
         window.discordUsers = {};
 
         const vouchChannels = {
@@ -638,44 +932,36 @@
             }
         };
 
-        // Instant and bulletproof page navigation
         window.showPage = function(pageId) {
             try {
-                // 1. Instantly hide everything
                 document.querySelectorAll('.view-section').forEach(el => {
                     el.style.display = 'none';
                     el.classList.remove('active');
                 });
-                
-                // 2. Instantly show target
                 const target = document.getElementById(pageId + '-page');
                 if (target) {
                     target.style.display = 'block';
-                    // Slight delay to trigger CSS opacity fade-in
                     setTimeout(() => target.classList.add('active'), 10);
                 }
-                
                 window.scrollTo({ top: 0, behavior: 'smooth' });
 
-                // 3. Handle Navigation Links
                 const navItems = document.querySelectorAll('.home-nav-link');
-                if (pageId === 'home') {
-                    navItems.forEach(el => el.classList.remove('hidden'));
-                } else {
-                    navItems.forEach(el => el.classList.add('hidden'));
-                }
-            } catch (err) {
-                console.error("Navigation Error:", err);
-            }
+                if (pageId === 'home') navItems.forEach(el => el.classList.remove('hidden'));
+                else navItems.forEach(el => el.classList.add('hidden'));
+            } catch (err) { console.error("Navigation Error:", err); }
         };
 
-        // Button Click Handler logic to guarantee order of execution
         window.showVouches = function(type) {
+            window.currentVouchType = type;
             window.showPage('vouches');
+            
+            // Re-render the side panels instantly
+            renderLeaderboard();
+            renderTopDeals(type);
+
             fetchLiveVouches(type).catch(err => console.error(err));
         };
 
-        // Fetches real messages from your custom backend bot
         async function fetchLiveVouches(type) {
             const channel = vouchChannels[type];
             document.getElementById('vouch-title').textContent = channel.title;
@@ -690,44 +976,20 @@
             let fetchError = null;
 
             try {
-                // Fetch directly from your bot.py server
                 const response = await fetch(BACKEND_URL + "vouches/" + channel.id);
+                if (!response.ok) throw new Error(`Backend Error: ${response.status}`);
+                messages = await response.json();
+                if (messages.error) throw new Error(messages.error);
 
-                if (!response.ok) {
-                    let errorMessage = `Backend Error: ${response.status}`;
-                    try {
-                        const errorData = await response.json();
-                        if (errorData.error) errorMessage = errorData.error;
-                    } catch(e) {}
-                    throw new Error(errorMessage);
-                }
-
-                // If response is OK, safely parse JSON
-                try {
-                    messages = await response.json();
-                } catch(e) {
-                    throw new Error("Received an invalid format from the server. Make sure bot.py is returning JSON.");
-                }
-                
-                if (messages.error) {
-                    throw new Error(messages.error);
-                }
-
-                // TIER 1: SAVE TO BROWSER CACHE
                 localStorage.setItem(`gamez_vouches_${channel.id}`, JSON.stringify(messages));
-                
-                // TIER 2: SAVE TO FIREBASE CLOUD (So brand new users can see it if bot goes offline)
                 if (window.firebaseUser) {
                     try {
                         const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'vouches', channel.id);
                         await setDoc(docRef, { content: JSON.stringify(messages) });
-                    } catch(e) { console.error("Firebase save error", e); }
+                    } catch(e) {}
                 }
-
             } catch (error) {
                 fetchError = error;
-                
-                // TRY TO LOAD FROM FIREBASE CLOUD FIRST (For new users)
                 if (window.firebaseUser && !messages) {
                     try {
                         const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'vouches', channel.id);
@@ -736,23 +998,17 @@
                             messages = JSON.parse(snap.data().content);
                             isOfflineCache = true;
                         }
-                    } catch(e) { console.error("Firebase load error", e); }
+                    } catch(e) {}
                 }
-
-                // TRY TO LOAD FROM OFFLINE CACHE IF FIREBASE FAILS/EMPTY
                 if (!messages) {
                     const cachedData = localStorage.getItem(`gamez_vouches_${channel.id}`);
                     if (cachedData) {
-                        try {
-                            messages = JSON.parse(cachedData);
-                            isOfflineCache = true;
-                        } catch(e) {}
+                        try { messages = JSON.parse(cachedData); isOfflineCache = true; } catch(e) {}
                     }
                 }
             }
 
             if (!messages) {
-                // All tiers failed
                 feed.innerHTML = `
                     <div class="glass-card border-red-500/30 bg-red-500/5 text-red-300 p-8 rounded-2xl text-left">
                         <p class="font-bold text-xl mb-4 text-white text-center">Connection to Bot Failed</p>
@@ -776,25 +1032,15 @@
                 `;
             }
 
-            // Filter out empty messages (images only), and ignore messages from bots
-            const validMessages = messages.filter(msg => 
-                msg.content && 
-                msg.content.trim() !== '' && 
-                !msg.author.bot
-            );
-
+            const validMessages = messages.filter(msg => msg.content && msg.content.trim() !== '' && !msg.author.bot);
             if (validMessages.length === 0) {
                 feed.innerHTML += '<div class="text-zinc-400 text-center py-10">No recent vouches found in this channel.</div>';
                 return;
             }
 
-            // Parse and map messages into beautiful Discord-style cards
             validMessages.forEach(msg => {
-                // Cache the user data for the modal fallbacks
                 window.discordUsers[msg.author.id] = msg.author;
-                if (msg.mentions) {
-                    msg.mentions.forEach(u => window.discordUsers[u.id] = u);
-                }
+                if (msg.mentions) msg.mentions.forEach(u => window.discordUsers[u.id] = u);
 
                 const avatarUrl = msg.author.avatar 
                     ? `https://cdn.discordapp.com/avatars/${msg.author.id}/${msg.author.avatar}.png` 
@@ -803,13 +1049,8 @@
                 const dateObj = new Date(msg.timestamp);
                 const formattedDate = dateObj.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
 
-                let cleanContent = msg.content.replace(/[&<>'"]/g, 
-                    tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag])
-                );
+                let cleanContent = msg.content.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag]));
 
-                // --- DISCORD MARKDOWN & PROFILE LINK PARSER ---
-                
-                // 1. Mentions -> Opens custom Profile Modal instead of redirecting
                 cleanContent = cleanContent.replace(/&lt;@!?(\d+)&gt;/g, (match, id) => {
                     let username = "User";
                     if (msg.mentions && msg.mentions.length > 0) {
@@ -819,29 +1060,19 @@
                     return `<span onclick="window.openProfileModal('${id}')" title="View Profile" class="text-indigo-400 bg-indigo-500/10 hover:bg-indigo-500/20 px-1.5 py-0.5 rounded font-medium transition-colors cursor-pointer inline-flex items-center">@${username}</span>`;
                 });
 
-                // 2. Custom Emojis -> Render actual image
                 cleanContent = cleanContent.replace(/&lt;(a?):([a-zA-Z0-9_]+):(\d+)&gt;/g, (match, animated, name, id) => {
                     const ext = animated ? 'gif' : 'png';
                     return `<img src="https://cdn.discordapp.com/emojis/${id}.${ext}" alt=":${name}:" class="inline-block w-5 h-5 align-middle mx-0.5">`;
                 });
 
-                // 3. Bold: **text**
                 cleanContent = cleanContent.replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-bold">$1</strong>');
-
-                // 4. Italic: *text* or _text_
                 cleanContent = cleanContent.replace(/\*(.*?)\*/g, '<em class="italic">$1</em>');
                 cleanContent = cleanContent.replace(/_(.*?)_/g, '<em class="italic">$1</em>');
-
-                // 5. Underline: __text__
                 cleanContent = cleanContent.replace(/__(.*?)__/g, '<u class="underline underline-offset-2">$1</u>');
-
-                // 6. Strikethrough: ~~text~~
                 cleanContent = cleanContent.replace(/~~(.*?)~~/g, '<s class="line-through opacity-60">$1</s>');
-
-                // 7. Inline Code: `text`
                 cleanContent = cleanContent.replace(/`(.*?)`/g, '<code class="bg-black/50 text-indigo-300 px-1.5 py-0.5 rounded font-mono text-sm">$1</code>');
 
-                const cardHTML = `
+                feed.innerHTML += `
                     <div class="vouch-card p-6 rounded-2xl flex gap-4">
                         <img src="${avatarUrl}" onclick="window.openProfileModal('${msg.author.id}')" alt="${msg.author.username}" class="w-12 h-12 rounded-full shrink-0 object-cover bg-zinc-800 border border-white/5 cursor-pointer hover:opacity-80 transition-opacity">
                         <div>
@@ -851,19 +1082,14 @@
                             </div>
                             <p class="text-zinc-300 leading-relaxed whitespace-pre-wrap break-words">${cleanContent}</p>
                         </div>
-                    </div>
-                `;
-                feed.innerHTML += cardHTML;
+                    </div>`;
             });
         }
-
-        // --- Real-time Profile Modal Logic ---
 
         window.openProfileModal = async function(userId) {
             const modal = document.getElementById('profile-modal');
             const card = document.getElementById('profile-card');
             
-            // 1. Reset to loading state while fetching from bot
             document.getElementById('profile-avatar').src = 'https://cdn.discordapp.com/embed/avatars/0.png';
             document.getElementById('profile-banner').style.background = '#111214';
             document.getElementById('profile-global-name').textContent = 'Loading User...';
@@ -881,15 +1107,11 @@
             let isOfflineCache = false;
 
             try {
-                // 2. Fetch real data from your Python backend
                 const GUILD_ID = "1376234347719299104";
                 const response = await fetch(`${BACKEND_URL}user/${GUILD_ID}/${userId}`);
-                
-                if (!response.ok) throw new Error("Failed to fetch user data");
-                
+                if (!response.ok) throw new Error("Failed to fetch");
                 data = await response.json();
 
-                // SAVE TO CACHE (Local and Cloud)
                 localStorage.setItem(`gamez_profile_${userId}`, JSON.stringify(data));
                 if (window.firebaseUser) {
                     try {
@@ -897,47 +1119,29 @@
                         await setDoc(docRef, { content: JSON.stringify(data) });
                     } catch(e) {}
                 }
-
             } catch (e) {
-                // TRY TO LOAD FROM FIREBASE CLOUD
                 if (window.firebaseUser && !data) {
                     try {
                         const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'profiles', userId);
                         const snap = await getDoc(docRef);
-                        if (snap.exists()) {
-                            data = JSON.parse(snap.data().content);
-                            isOfflineCache = true;
-                        }
+                        if (snap.exists()) { data = JSON.parse(snap.data().content); isOfflineCache = true; }
                     } catch(err) {}
                 }
-
-                // TRY TO LOAD FROM LOCAL CACHE
                 if (!data) {
                     const cachedData = localStorage.getItem(`gamez_profile_${userId}`);
-                    if (cachedData) {
-                        try {
-                            data = JSON.parse(cachedData);
-                            isOfflineCache = true;
-                        } catch(err) {}
-                    }
+                    if (cachedData) { try { data = JSON.parse(cachedData); isOfflineCache = true; } catch(err) {} }
                 }
             }
 
             try {
-                if (!data) throw new Error("No data available");
-
+                if (!data) throw new Error("No data");
                 const user = data.user;
                 const roles = data.roles || [];
 
-                // 3. Set Avatar (Supports GIFs)
                 const isAnimated = user.avatar && user.avatar.startsWith('a_');
                 const ext = isAnimated ? 'gif' : 'png';
-                const avatarUrl = user.avatar 
-                    ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${ext}?size=256` 
-                    : 'https://cdn.discordapp.com/embed/avatars/0.png';
-                document.getElementById('profile-avatar').src = avatarUrl;
+                document.getElementById('profile-avatar').src = user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${ext}?size=256` : 'https://cdn.discordapp.com/embed/avatars/0.png';
 
-                // 4. Set Banner (Supports GIFs and Accent Colors)
                 const bannerEl = document.getElementById('profile-banner');
                 if (user.banner) {
                     const bExt = user.banner.startsWith('a_') ? 'gif' : 'png';
@@ -951,28 +1155,15 @@
                     bannerEl.style.backgroundColor = '#5865F2'; 
                 }
 
-                // 5. Text Info (Prioritizes Server Nickname if they have one)
-                const displayName = (data.member && data.member.nick) ? data.member.nick : (user.global_name || user.username);
-                document.getElementById('profile-global-name').textContent = displayName;
+                document.getElementById('profile-global-name').textContent = (data.member && data.member.nick) ? data.member.nick : (user.global_name || user.username);
                 document.getElementById('profile-username').textContent = user.username;
                 
-                // 6. Badges (Real Public Flags + Nitro/Boost Inferences)
                 let badgesHTML = '';
                 const flags = user.public_flags || 0;
-                const addBadge = (name, img) => {
-                    badgesHTML += `<img src="${img}" title="${name}" class="w-[22px] h-[22px]">`;
-                };
+                const addBadge = (name, img) => { badgesHTML += `<img src="${img}" title="${name}" class="w-[22px] h-[22px]">`; };
 
-                // Infer Nitro from animated properties
-                if (isAnimated || (user.banner && user.banner.startsWith('a_'))) {
-                    addBadge('Nitro', 'https://raw.githubusercontent.com/mezotv/discord-badges/main/assets/nitro.png');
-                }
-                
-                // Booster badge if member object has 'premium_since'
-                if (data.member && data.member.premium_since) {
-                    addBadge('Server Booster', 'https://raw.githubusercontent.com/mezotv/discord-badges/main/assets/boost1month.png');
-                }
-                
+                if (isAnimated || (user.banner && user.banner.startsWith('a_'))) addBadge('Nitro', 'https://raw.githubusercontent.com/mezotv/discord-badges/main/assets/nitro.png');
+                if (data.member && data.member.premium_since) addBadge('Server Booster', 'https://raw.githubusercontent.com/mezotv/discord-badges/main/assets/boost1month.png');
                 if (flags & 64) addBadge('HypeSquad Bravery', 'https://raw.githubusercontent.com/mezotv/discord-badges/main/assets/hypesquadbravery.png');
                 if (flags & 128) addBadge('HypeSquad Brilliance', 'https://raw.githubusercontent.com/mezotv/discord-badges/main/assets/hypesquadbrilliance.png');
                 if (flags & 256) addBadge('HypeSquad Balance', 'https://raw.githubusercontent.com/mezotv/discord-badges/main/assets/hypesquadbalance.png');
@@ -980,42 +1171,30 @@
                 if (flags & 4194304) addBadge('Active Developer', 'https://raw.githubusercontent.com/mezotv/discord-badges/main/assets/activedeveloper.png');
 
                 const badgesContainer = document.getElementById('profile-badges');
-                if (badgesHTML) {
-                    badgesContainer.innerHTML = badgesHTML;
-                    badgesContainer.style.display = 'flex';
-                } else {
-                    badgesContainer.style.display = 'none';
-                }
+                if (badgesHTML) { badgesContainer.innerHTML = badgesHTML; badgesContainer.style.display = 'flex'; } 
+                else { badgesContainer.style.display = 'none'; }
 
-                // 7. Bio (API Restricted for bots)
                 let bioText = '<span class="text-zinc-500 italic">Discord API restricts bots from reading private user bios.</span>';
                 if (isOfflineCache) bioText += '<br><span class="text-yellow-500 font-bold text-xs mt-2 block">Viewing offline cached profile</span>';
                 document.getElementById('profile-bio').innerHTML = bioText;
 
-                // 8. Render Exact Real Roles & Colors
                 const rolesContainer = document.getElementById('profile-roles');
                 rolesContainer.innerHTML = '';
                 if (roles.length > 0) {
                     roles.forEach(role => {
-                        // Convert integer color to hex code
                         const colorHex = role.color === 0 ? '#B9BBBE' : '#' + role.color.toString(16).padStart(6, '0');
                         rolesContainer.innerHTML += `
                             <div class="flex items-center gap-1.5 bg-[#2B2D31] px-2 py-1 rounded text-xs font-medium text-zinc-300 border border-white/5">
                                 <div class="w-3 h-3 rounded-full" style="background-color: ${colorHex}"></div> 
                                 ${role.name}
-                            </div>
-                        `;
+                            </div>`;
                     });
                 } else {
                     rolesContainer.innerHTML = '<span class="text-xs text-zinc-500">No roles in this server</span>';
                 }
-
             } catch (e) {
-                // Fallback if backend fetch fails AND no cache exists
                 document.getElementById('profile-bio').textContent = "Failed to load real data (Bot offline).";
                 document.getElementById('profile-roles').innerHTML = '<span class="text-xs text-red-400">Error fetching roles</span>';
-                
-                // Use cached simple user data if available
                 const fallbackUser = window.discordUsers[userId];
                 if(fallbackUser) {
                     document.getElementById('profile-global-name').textContent = fallbackUser.global_name || fallbackUser.username;
@@ -1029,12 +1208,8 @@
             const card = document.getElementById('profile-card');
             modal.classList.add('opacity-0');
             card.classList.add('scale-95');
-            setTimeout(() => {
-                modal.style.display = 'none';
-            }, 300);
+            setTimeout(() => { modal.style.display = 'none'; }, 300);
         };
-
-        // --- Other Interactions ---
 
         window.copyToClipboard = function(text) {
             const el = document.createElement('textarea');
@@ -1043,24 +1218,19 @@
             el.select();
             document.execCommand('copy');
             document.body.removeChild(el);
-
             const toast = document.getElementById('copy-toast');
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 3000);
         };
 
-        // Intersection Observer for scroll animations
         const revealElements = document.querySelectorAll('.reveal');
         const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) entry.target.classList.add('active');
-            });
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
         }, { threshold: 0.1 });
         revealElements.forEach(el => observer.observe(el));
 
-        // --- BACKGROUND SILENT SYNC (PROACTIVE CACHING) ---
         window.syncDataToCache = async function() {
-            if (!window.firebaseUser) return; // Wait for Firebase Auth
+            if (!window.firebaseUser) return; 
             try {
                 for (const type in vouchChannels) {
                     const channel = vouchChannels[type];
@@ -1068,19 +1238,15 @@
                     if (response.ok) {
                         const messages = await response.json();
                         if (!messages.error && Array.isArray(messages)) {
-                            // Automatically save to local browser and Firebase Cloud!
                             localStorage.setItem(`gamez_vouches_${channel.id}`, JSON.stringify(messages));
                             const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'vouches', channel.id);
                             await setDoc(docRef, { content: JSON.stringify(messages) });
                         }
                     }
                 }
-            } catch (e) {
-                // Silently ignore background errors (bot is offline)
-            }
+            } catch (e) {}
         };
 
-        // Initial Load Preloader
         window.addEventListener('load', () => {
             const preloader = document.getElementById('preloader');
             setTimeout(() => {
@@ -1090,9 +1256,14 @@
                 document.querySelectorAll('.view-section.active .reveal').forEach(el => el.classList.add('active'));
             }, 5000);
 
-            // Proactively fetch and save all data in the background immediately, then every 30 seconds
-            setTimeout(window.syncDataToCache, 2000);
-            setInterval(window.syncDataToCache, 30000);
+            setTimeout(() => {
+                window.syncDataToCache();
+                if(window.db2) loadLiveDealsData();
+            }, 2000);
+            setInterval(() => {
+                window.syncDataToCache();
+                if(window.db2) loadLiveDealsData();
+            }, 30000);
         });
 
         document.body.style.overflow = 'hidden';
