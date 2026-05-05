@@ -27,11 +27,28 @@
             background-color: #050505;
             color: white;
             overflow-x: hidden;
+        }
+
+        /* --- DYNAMIC BACKGROUND MOTION --- */
+        #bg-layer {
+            position: fixed;
+            top: -10%; left: -10%;
+            width: 120%; height: 120%;
+            z-index: -999;
+            pointer-events: none;
             background-image: linear-gradient(rgba(5, 5, 5, 0.75), rgba(5, 5, 5, 0.9)), 
                               url('https://res.cloudinary.com/dtx8hi2qz/image/upload/v1775397821/aad_wi57o5.webp');
-            background-attachment: fixed;
             background-size: cover;
             background-position: center;
+            /* Noticeable and smooth cinematic pan & zoom */
+            animation: bgPanMotion 20s infinite alternate ease-in-out;
+            will-change: transform; 
+        }
+
+        @keyframes bgPanMotion {
+            0% { transform: scale(1) translate(0px, 0px); }
+            50% { transform: scale(1.05) translate(-1.5%, 1.5%); }
+            100% { transform: scale(1.1) translate(1.5%, -1.5%); }
         }
 
         /* --- ADVANCED ANIMATIONS --- */
@@ -229,6 +246,9 @@
     </style>
 </head>
 <body class="antialiased">
+
+    <!-- DYNAMIC BACKGROUND LAYER -->
+    <div id="bg-layer"></div>
 
     <!-- PRELOADER -->
     <div id="preloader">
